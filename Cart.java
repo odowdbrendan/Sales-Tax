@@ -22,67 +22,69 @@ public class Cart {
 
             /* Keyword to break the loop and then print recipt */
             if (item.equals("Done Shopping")) {
-               break;
+                break;
             }
 
             Product prod = parseInput(item);
-            String key = prod.productType + prod.price;
-
-            if (shoppingCart.containsKey(key)) {
-                Product existProd = shoppingCart.get(key);
-                existProd.quantity++;
-            } else {
-                shoppingCart.put(key, prod);
-            }
+            addToCart(prod);
         }
     }
 
+    static Product parseInput(String item) {
 
-    static Product parseInput(String item){
+        double itemSalesTax = 0.0;
+        final double importTax = 0.05;
+        final double salesTax = 0.10;
+        boolean imported = false;
 
-            double itemSalesTax = 0.0;
-            final double importTax = 0.05;
-            final double salesTax = 0.10;
-            boolean imported = false;
+        if (item.contains("Imported") || item.contains("imported")) {
+            imported = true;
+        }
 
-            if (item.contains("Imported") || item.contains("imported")) {
-                imported = true;
-            }
+        String[] split = item.split(" at ");
+        String firstSubString = split[0];
+        String parts[] = firstSubString.split(" ", 2);
 
-            String[] split = item.split(" at ");
-            String firstSubString = split[0];
-            String parts[] = firstSubString.split(" ", 2);
+        int quantity = Integer.parseInt(parts[0]);
+        String productName = parts[1];
+        double price = Double.parseDouble(split[1]);
 
-            int quantity = Integer.parseInt(parts[0]);
-            String productName = parts[1];
-            double price = Double.parseDouble(split[1]);
+        /* Check if product is imported and add import tax if so */
+        if (imported) {
+            itemSalesTax += (price * importTax);
+            totalSalesTax += (price * importTax);
+        }
 
-            /* Check if product is imported and add import tax if so */
-            if (imported) {
-                itemSalesTax += (price * importTax);
-                totalSalesTax += (price * importTax);
-            }
+        /*
+         * Check if product falls under any of the tax free items - if not add sales tax
+         */
+        if (productName.contains("Book") || productName.contains("Chocolate") || productName.contains("chocolate")
+                || productName.contains("headache")) {
+        } else {
+            itemSalesTax += (price * salesTax);
+            totalSalesTax += (price * salesTax);
+        }
 
-            /*
-             * Check if product falls under any of the tax free items - if not add sales tax
-             */
-            if (productName.contains("Book") || productName.contains("Chocolate") || productName.contains("chocolate")
-                    || productName.contains("headache")) {
-            } else {
-                itemSalesTax += (price * salesTax);
-                totalSalesTax += (price * salesTax);
-            }
+        /* Rounds UP the tax to nearest 0.05 */
+        itemSalesTax = (Math.ceil((itemSalesTax) * 20.0) / 20.0);
 
-            /* Rounds UP the tax to nearest 0.05 */
-            itemSalesTax = (Math.ceil((itemSalesTax) * 20.0) / 20.0);
+        /* Adjust price with tax added on and the total price */
+        price = price + itemSalesTax;
+        totalPrice += price;
 
-            /* Adjust price with tax added on and the total price */
-            price = price + itemSalesTax;
-            totalPrice += price;
-
-            return new Product(price, productName, quantity, imported);
+        return new Product(price, productName, quantity, imported);
     }
 
+    static void addToCart(Product prod) {
+        String key = prod.productType + prod.price;
+
+        if (shoppingCart.containsKey(key)) {
+            Product existProd = shoppingCart.get(key);
+            existProd.quantity++;
+        } else {
+            shoppingCart.put(key, prod);
+        }
+    }
 
     /*
      * Loops through the HashMap and prints the product to 2 decimal places based on
