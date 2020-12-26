@@ -1,4 +1,5 @@
-Brendan O'Dowd - DealerOn Submission 
+Brendan O'Dowd
+December 26th, 2020
 
 Design 
 Product Class -> The purpose of this class is to define what a Product is. The product contains fields to hold the price of the product,the quantity, the product type, and whether it is an imported product.
@@ -13,10 +14,15 @@ Assumptions:
 - In order to stop entering items, the user should enter "Done Shopping"
 - The tax free items listed in the project description are Books, Food, and Medicines. I hard coded to show as tax exempt if the product contains the word Book, Chocolate, or       headache as examples. Others will not be counted as tax free, for example "1 Pizza at 18.99" will be shown with sales tax included.
 
-            
-            
-             
+Example Input:
+1 Book at 12.49
+1 Book at 12.49
+1 Music CD at 14.99
+1 Chocolate bar at 0.85
 
-            
-             
-              
+Output:
+Book: 24.98 (2 @ 12.49)
+Music CD: 16.49
+Chocolate bar: 0.85
+Sales Taxes: 1.50
+Total: 42.32
