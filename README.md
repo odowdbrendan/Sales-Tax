@@ -2,6 +2,7 @@ Brendan O'Dowd
 December 26th, 2020
 
 Design 
+
 Product Class -> The purpose of this class is to define what a Product is. The product contains fields to hold the price of the product,the quantity, the product type, and whether it is an imported product.
                  
 
