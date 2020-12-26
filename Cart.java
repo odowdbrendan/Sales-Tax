@@ -14,11 +14,6 @@ public class Cart {
     }
 
     static void enterItems() {
-
-        double itemSalesTax = 0.0;
-        final double salesTax = 0.10;
-        final double importTax = 0.05;
-
         Scanner scan = new Scanner(System.in);
         System.out.println("Please enter the items you would like to purchase.");
 
@@ -27,11 +22,29 @@ public class Cart {
 
             /* Keyword to break the loop and then print recipt */
             if (item.equals("Done Shopping")) {
-                break;
+               break;
             }
 
-            /* Lines 34-51 parse the input String */
+            Product prod = parseInput(item);
+            String key = prod.productType + prod.price;
+
+            if (shoppingCart.containsKey(key)) {
+                Product existProd = shoppingCart.get(key);
+                existProd.quantity++;
+            } else {
+                shoppingCart.put(key, prod);
+            }
+        }
+    }
+
+
+    static Product parseInput(String item){
+
+            double itemSalesTax = 0.0;
+            final double importTax = 0.05;
+            final double salesTax = 0.10;
             boolean imported = false;
+
             if (item.contains("Imported") || item.contains("imported")) {
                 imported = true;
             }
@@ -67,21 +80,9 @@ public class Cart {
             price = price + itemSalesTax;
             totalPrice += price;
 
-            /*
-             * HashMap to track reapeat products -using product name and price as the unique
-             * key
-             */
-            String key = productName + price;
-
-            if (shoppingCart.containsKey(key)) {
-                Product prod = shoppingCart.get(key);
-                prod.quantity++;
-            } else {
-                shoppingCart.put(key, new Product(price, productName, quantity, imported));
-            }
-            itemSalesTax = 0.0;
-        }
+            return new Product(price, productName, quantity, imported);
     }
+
 
     /*
      * Loops through the HashMap and prints the product to 2 decimal places based on
